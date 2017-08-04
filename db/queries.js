@@ -9,7 +9,6 @@ module.exports = {
   },
   getSkills: function() {
     return knex('skills')
-
   }
 
 }
