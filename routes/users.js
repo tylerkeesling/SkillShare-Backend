@@ -32,4 +32,10 @@ router.get('/:id', function(req, res) {
 	})
 })
 
+router.put('/:id', function(req, res) {
+	queries.updateUserById(req.params.id, req.body).then(() => {
+		res.send("update completed")
+	})
+})
+
 module.exports = router;

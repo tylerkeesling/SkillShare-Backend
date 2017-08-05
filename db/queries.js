@@ -18,5 +18,15 @@ module.exports = {
     .join('skills','skills.id','user_skills.skills_id')
     .where('user_skills.users_id', id)
     .select('skills.id','skills.name')
-	}
+	},
+  getSuggestedMatchesById: function(id) {
+    console.log('not working yet');
+	},
+  updateUserById: function(id, body) {
+    return knex('users')
+      .where('id', id)
+      .update(body)
+  }
+
+
 }
