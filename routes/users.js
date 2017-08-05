@@ -6,20 +6,30 @@ const queries = require('../db/queries')
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
-  queries.getUsers().then(users => {
-    res.json(users)
-  })
-});
-
-router.get('/:id', function(req, res) {
-  queries.getUsersById(req.params.id).then(user => {
-    res.json(user)
-  })
+	queries.getUsers().then(users => {
+		res.json(users)
+	})
 })
+
+// GET all the skills for ALL users
 router.get('/skills', function(req, res) {
-  queries.getSkills().then(user => {
-    res.json(user)
-  })
+	queries.getUserSkills().then(userSkills => {
+		res.json(userSkills)
+	})
+})
+
+// GET all the skills for one user by ID
+router.get('/skills/:id', function(req, res) {
+	queries.getUserSkillsById(req.params.id).then(userSkills => {
+		res.json(userSkills)
+	})
+})
+
+// GET individual user by ID
+router.get('/:id', function(req, res) {
+	queries.getUsersById(req.params.id).then(user => {
+		res.json(user)
+	})
 })
 
 module.exports = router;
