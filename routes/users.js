@@ -33,8 +33,21 @@ router.get('/:id', function(req, res) {
 })
 
 router.put('/:id', function(req, res) {
-	queries.updateUserById(req.params.id, req.body).then(() => {
-		res.send("update completed")
+	queries.updateUserById(req.params.id, req.body).then(data => {
+		res.json(data)
+	})
+})
+
+router.post('/skills/:id', function(req, res) {
+	queries.addSkillsToUser(req.body).then(data => {
+		res.json(data)
+	})
+})
+
+router.delete('/skills/:id/:skillId', function(req, res) {
+	queries.deleteSkillsFromUser(req.params.skillId).then(data => {
+		// res.json(data)
+		res.send({message:'deleted'})
 	})
 })
 
