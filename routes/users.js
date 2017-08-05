@@ -11,13 +11,21 @@ router.get('/', function(req, res, next) {
 	})
 })
 
-// All the skills for the user
+// GET all the skills for ALL users
 router.get('/skills', function(req, res) {
 	queries.getUserSkills().then(userSkills => {
 		res.json(userSkills)
 	})
 })
 
+// GET all the skills for one user by ID
+router.get('/skills/:id', function(req, res) {
+	queries.getUserSkillsById(req.params.id).then(userSkills => {
+		res.json(userSkills)
+	})
+})
+
+// GET individual user by ID
 router.get('/:id', function(req, res) {
 	queries.getUsersById(req.params.id).then(user => {
 		res.json(user)

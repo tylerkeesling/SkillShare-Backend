@@ -12,5 +12,8 @@ module.exports = {
 	},
 	getUserSkills: function() {
 		return knex('user_skills')
+	},
+	getUserSkillsById: function(id) {
+		return knex('user_skills').where('users_id', id)
 	}
 }
