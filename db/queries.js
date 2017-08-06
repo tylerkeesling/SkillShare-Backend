@@ -1,5 +1,4 @@
 var knex = require('./knex')
-
 module.exports = {
 	getUsers: function() {
 		return knex('users')
@@ -35,9 +34,7 @@ module.exports = {
 								 .whereIn('users.id', usersCanTeachYou)
 								 .where('user_skills.users_id', loggedUserId)
 								 .select('users.*' )
-
 				 })
-
 	},
   updateUserById: function(id, body) {
     return knex('users')
