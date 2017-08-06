@@ -51,4 +51,10 @@ router.delete('/skills/:id/:skillId', function(req, res) {
 	})
 })
 
+router.get('/matches/:id', function(req, res) {
+	queries.getSuggestedMatchesById(req.params.id).then(data => {
+		res.json(data)
+	})
+})
+
 module.exports = router;
