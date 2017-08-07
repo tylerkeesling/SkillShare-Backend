@@ -13,6 +13,7 @@ router.get('/', (req, res, next) => {
 
 router.get('/image', (req, res, next) => {
   s3.listObjects({Bucket: process.env.S3_BUCKET}, (err, resp) => {
+    console.log(process.env.S3_BUCKET)
     if (err) {
       next(err)
     } else {
@@ -21,7 +22,7 @@ router.get('/image', (req, res, next) => {
   })
 })
 
-router.post('/image', upload.single('image'), (req, res) => {
+router.post('/image/:id', upload.single('image'), (req, res) => {
   let id = uuid();
   s3.putObject({
     Bucket: process.env.S3_BUCKET,
@@ -31,6 +32,9 @@ router.post('/image', upload.single('image'), (req, res) => {
     if (err) {
       next(err)
     } else {
+      knex('users')
+      .update('photo', `https://s3.us-east-2.amazonaws.com/skillshareimagebucket/${id}`)
+      .where('id',req.params.id)
       res.json(`{"success": true}`)
     }
   });
