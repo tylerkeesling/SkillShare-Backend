@@ -16,7 +16,7 @@ router.post('/login', function(req, res, next) {
 			} else {
 				var match = bcrypt.compareSync(req.body.password, user[0].password)
 				if (match) {
-					let token = jwt.sign(user[0], process.env.TOKEN_SECRET)
+					let token = jwt.sign(user[0].id, process.env.TOKEN_SECRET)
 					res.json({
 						data: token
 					})
@@ -26,6 +26,9 @@ router.post('/login', function(req, res, next) {
 					})
 				}
 			}
+		})
+		.catch(err => {
+			res.json(err)
 		})
 })
 
