@@ -52,6 +52,39 @@ module.exports = {
     .del()
     .where('id', id)
     .returning('*')
-  }
+  } ,
+	sendConnectionInvite: function(body) {
+		return knex('user_connections')
+		// body should be object contains userSendInvite_id,userRecievedInvite_id,acceptStatus=false
+		       .insert(body)
+					 .returning('*')
+	} ,
+	acceptConnectionInvite: function(body) {
+		return knex('user_connections')
+		       .where({
+						 userSendInvite_id: body.userSendInvite_id ,
+						 userRecievedInvite_id: body.userRecievedInvite_id
+					 })
+		       .update({
+						 acceptStatus:true
+					 })
+	} ,
+	getInvitesSentByUserId: function(id) {
+		return knex(user_connections)
+		.where({
+			userSendInvite_id: id ,
+			acceptStatus: false
+		})
+	} ,
+	getInvitesRecievedByUserId: function(id) {
+		return knex(user_connections)
+		.where({
+			userRecievedInvite_id: id,
+			acceptStatus: false
+		})
+	} ,
+	getConnectedByUserId: function(id) {
+		return knex.raw('select userSendInvite_id as id from user_connections where userSendInvite_id = ? and acceptStatus=true  union select userRecievedInvite_id as id from user_connections where userRecievedInvite_id = ? and acceptStatus=true ', [id])
+	}
 
 } //end module exports
