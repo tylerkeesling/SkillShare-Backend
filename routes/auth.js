@@ -20,30 +20,36 @@ router.post('/login', function(req, res, next) {
 				res.json({
 					error: 'Email or password did not match.'
 				})
+			} else {
+				var match = bcrypt.compareSync(req.body.password, user[0].password)
+				if (match) {
+					console.log(match);
+				}
 			}
 		})
-	// 	.then(user => {
-	// 		// do they exist
-	// 		if (user.length === 0) {
-	// 			res.json({
-	// 				error: 'Email or password did not match.'
-	// 			})
-	// 		} else {
-	// 			var match = bcrypt.compareSync(req.body.password, user[0].password)
-	// 			if (match) {
-	// 				// login
-	// 				delete user[0].password
-	// 				var token = jwt.sign(user[0], 'secret_token')
-	// 				res.json({
-	// 					data: token
-	// 				})
-	// 			} else {
-	// 				res.json({
-	// 					error: 'Email or password did not match.'
-	// 				})
-	// 			}
-	// 		}
-	// 	})
 })
 
 module.exports = router
+
+// 	.then(user => {
+// 		// do they exist
+// 		if (user.length === 0) {
+// 			res.json({
+// 				error: 'Email or password did not match.'
+// 			})
+// 		} else {
+// 			var match = bcrypt.compareSync(req.body.password, user[0].password)
+// 			if (match) {
+// 				// login
+// 				delete user[0].password
+// 				var token = jwt.sign(user[0], 'secret_token')
+// 				res.json({
+// 					data: token
+// 				})
+// 			} else {
+// 				res.json({
+// 					error: 'Email or password did not match.'
+// 				})
+// 			}
+// 		}
+// 	})
