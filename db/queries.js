@@ -24,6 +24,7 @@ module.exports = {
 				 .where('users.id', id)
 				 .select('users.id', 'user_skills.users_id')
 				 .then(function (data) {
+					 console.log(data);
 					var loggedUserId=data[0].id
 					var usersCanTeachYou=[]
 					for (var i = 0; i < data.length; i++) {
@@ -34,6 +35,23 @@ module.exports = {
 								 .whereIn('users.id', usersCanTeachYou)
 								 .where('user_skills.users_id', loggedUserId)
 								 .select('users.*' )
+
+				 })
+				 .then(function (users) {
+				 	var requests =users.map(function(user){
+						return knex('users')
+						.select('skills.id', 'skills.name')
+						.join ('user_skills', 'users.id','user_skills.users_id')
+						.join('skills','skills.id','user_skills.skills_id')
+						.where('users.id',user.id)
+					})
+					return Promise.all(requests).then(function(skills_sets){
+						console.log(skills_sets)
+						return users.map(function(user,i){
+							user.skills=skills_sets[i]
+							return user
+						})
+					})
 				 })
 	},
   updateUserById: function(id, body) {
