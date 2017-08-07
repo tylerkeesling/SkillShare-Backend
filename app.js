@@ -8,7 +8,7 @@ var index = require('./routes/index');
 var users = require('./routes/users');
 var skills = require('./routes/skills');
 var auth = require('./routes/auth')
-
+var image=require('./routes/image')
 var app = express();
 const cors = require('cors');
 app.use(cors());
@@ -31,6 +31,7 @@ app.use('/', index);
 app.use('/users', users);
 app.use('/skills', skills);
 app.use('/auth', auth)
+app.use('/image',image)
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
