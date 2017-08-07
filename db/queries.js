@@ -33,9 +33,10 @@ module.exports = {
 				}
 				return knex('users')
 					.join('user_skills', 'user_skills.skills_id', 'users.skill_learn')
+					.join('skills','skills.id','users.skill_learn')
 					.whereIn('users.id', usersCanTeachYou)
 					.where('user_skills.users_id', loggedUserId)
-					.select('users.*')
+					.select('users.*','skills.name as skills_name')
 
 			})
 			.then(function(users) {
