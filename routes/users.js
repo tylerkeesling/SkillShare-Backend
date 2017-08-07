@@ -21,7 +21,9 @@ router.get('/skills', function(req, res) {
 // GET all the skills for one user by ID
 router.get('/skills/:id', function(req, res) {
 	queries.getUserSkillsById(req.params.id).then(userSkills => {
+
 		res.json(userSkills)
+
 	})
 })
 
@@ -53,6 +55,7 @@ router.delete('/skills/:id/:skillId', function(req, res) {
 
 router.get('/matches/:id', function(req, res) {
 	queries.getSuggestedMatchesById(req.params.id).then(data => {
+		console.log(data)
 		res.json(data)
 	})
 })

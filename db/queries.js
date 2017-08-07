@@ -1,4 +1,5 @@
 var knex = require('./knex')
+
 module.exports = {
 	getUsers: function() {
 		return knex('users')
@@ -24,6 +25,7 @@ module.exports = {
 			.where('users.id', id)
 			.select('users.id', 'user_skills.users_id')
 			.then(function(data) {
+				console.log(data);
 				var loggedUserId = data[0].id
 				var usersCanTeachYou = []
 				for (var i = 0; i < data.length; i++) {
@@ -34,6 +36,23 @@ module.exports = {
 					.whereIn('users.id', usersCanTeachYou)
 					.where('user_skills.users_id', loggedUserId)
 					.select('users.*')
+
+			})
+			.then(function(users) {
+				var requests = users.map(function(user) {
+					return knex('users')
+						.select('skills.id', 'skills.name')
+						.join('user_skills', 'users.id', 'user_skills.users_id')
+						.join('skills', 'skills.id', 'user_skills.skills_id')
+						.where('users.id', user.id)
+				})
+				return Promise.all(requests).then(function(skills_sets) {
+					console.log(skills_sets)
+					return users.map(function(user, i) {
+						user.skills = skills_sets[i]
+						return user
+					})
+				})
 			})
 	},
 	updateUserById: function(id, body) {
@@ -52,6 +71,39 @@ module.exports = {
 			.del()
 			.where('id', id)
 			.returning('*')
+	},
+	sendConnectionInvite: function(body) {
+		return knex('user_connections')
+			// body should be object contains userSendInvite_id,userRecievedInvite_id,acceptStatus=false
+			.insert(body)
+			.returning('*')
+	},
+	acceptConnectionInvite: function(body) {
+		return knex('user_connections')
+			.where({
+				userSendInvite_id: body.userSendInvite_id,
+				userRecievedInvite_id: body.userRecievedInvite_id
+			})
+			.update({
+				acceptStatus: true
+			})
+	},
+	getInvitesSentByUserId: function(id) {
+		return knex(user_connections)
+			.where({
+				userSendInvite_id: id,
+				acceptStatus: false
+			})
+	},
+	getInvitesRecievedByUserId: function(id) {
+		return knex(user_connections)
+			.where({
+				userRecievedInvite_id: id,
+				acceptStatus: false
+			})
+	},
+	getConnectedByUserId: function(id) {
+		return knex.raw('select userSendInvite_id as id from user_connections where userSendInvite_id = ? and acceptStatus=true  union select userRecievedInvite_id as id from user_connections where userRecievedInvite_id = ? and acceptStatus=true ', [id])
 	}
 
 } //end module exports
