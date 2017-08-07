@@ -4,7 +4,7 @@ const knex = require('../db/knex');
 const queries = require('../db/queries')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
-const dotenv = require('dotenv')
+require('dotenv').config()
 
 router.get('/', function(req, res) {
 	res.json({
@@ -13,7 +13,6 @@ router.get('/', function(req, res) {
 })
 
 router.post('/login', function(req, res, next) {
-	console.log(req.body);
 	knex('users').where('username', req.body.username)
 		.then(user => {
 			if (user.length === 0) {
@@ -23,7 +22,14 @@ router.post('/login', function(req, res, next) {
 			} else {
 				var match = bcrypt.compareSync(req.body.password, user[0].password)
 				if (match) {
-					console.log(match);
+					let token = jwt.sign(user[0], process.env.TOKEN_SECRET)
+					res.json({
+						data: token
+					})
+				} else {
+					res.json({
+						error: 'Username or password did not match.'
+					})
 				}
 			}
 		})
