@@ -5,7 +5,10 @@ module.exports = {
 		return knex('users')
 	},
 	getUsersById: function(id) {
-		return knex('users').where('id', id)
+		return knex('users')
+		.join('skills','skills.id','users.skill_learn')
+		.where('users.id', id)
+		.select('users.*','skills.name as skills_name')
 	},
 	getSkills: function() {
 		return knex('skills')
