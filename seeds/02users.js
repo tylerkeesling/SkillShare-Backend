@@ -2,7 +2,7 @@ exports.seed = function(knex, Promise) {
 
 	const bcrypt = require('bcrypt')
 	const saltRounds = 8
-	const hashOne = bcypt.hashSync('tyler', saltRounds)
+	const hashOne = bcrypt.hashSync('tyler', saltRounds)
 	const hashTwo = bcrypt.hashSync('yousif', saltRounds)
 	const hashThree = bcrypt.hashSync('maria', saltRounds)
 	const hashFour = bcrypt.hashSync('logan', saltRounds)
