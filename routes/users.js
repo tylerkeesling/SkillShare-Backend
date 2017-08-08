@@ -39,6 +39,7 @@ router.put('/:id', function(req, res) {
 })
 
 router.post('/skills/:id', function(req, res) {
+	console.log(req.body);
 	queries.addSkillsToUser(req.body, req.params.id).then(() => {
 			res.json({
 				message: 'success!!'
@@ -61,6 +62,19 @@ router.delete('/skills/:id/:skillId', function(req, res) {
 
 router.get('/matches/:id', function(req, res) {
 	queries.getSuggestedMatchesById(req.params.id).then(data => {
+		res.json(data)
+	})
+})
+
+router.post('/connection', function(req, res) {
+	queries.sendConnectionInvite(req.body).then(data => {
+		console.log(data)
+		res.json(data)
+	})
+})
+
+router.get('/connection/sent/:id', function(req, res) {
+	queries.getInvitesSentByUserId(req.params.id).then(data => {
 		res.json(data)
 	})
 })

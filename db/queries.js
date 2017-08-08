@@ -107,14 +107,14 @@ module.exports = {
 			})
 	},
 	getInvitesSentByUserId: function(id) {
-		return knex(user_connections)
+		return knex('user_connections')
 			.where({
 				userSendInvite_id: id,
 				acceptStatus: false
 			})
 	},
 	getInvitesRecievedByUserId: function(id) {
-		return knex(user_connections)
+		return knex('user_connections')
 			.where({
 				userRecievedInvite_id: id,
 				acceptStatus: false
