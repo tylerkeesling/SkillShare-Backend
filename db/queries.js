@@ -6,9 +6,9 @@ module.exports = {
 	},
 	getUsersById: function(id) {
 		return knex('users')
-		.join('skills','skills.id','users.skill_learn')
-		.where('users.id', id)
-		.select('users.*','skills.name as skills_name')
+			.join('skills', 'skills.id', 'users.skill_learn')
+			.where('users.id', id)
+			.select('users.*', 'skills.name as skills_name')
 	},
 	getSkills: function() {
 		return knex('skills')
@@ -31,24 +31,23 @@ module.exports = {
 				console.log(data);
 				var loggedUserId
 				var usersCanTeachYou
-				if (data[0] ==undefined) {
-					 loggedUserId = null
-					 usersCanTeachYou = null
-				}
-				else {
-					 loggedUserId = data[0].id
-					 usersCanTeachYou = []
+				if (data[0] == undefined) {
+					loggedUserId = null
+					usersCanTeachYou = null
+				} else {
+					loggedUserId = data[0].id
+					usersCanTeachYou = []
 					for (var i = 0; i < data.length; i++) {
 						usersCanTeachYou[i] = data[i].users_id
-				}
+					}
 
 				}
 				return knex('users')
 					.join('user_skills', 'user_skills.skills_id', 'users.skill_learn')
-					.join('skills','skills.id','users.skill_learn')
+					.join('skills', 'skills.id', 'users.skill_learn')
 					.whereIn('users.id', usersCanTeachYou)
 					.where('user_skills.users_id', loggedUserId)
-					.select('users.*','skills.name as skills_name')
+					.select('users.*', 'skills.name as skills_name')
 
 			})
 			.then(function(users) {
@@ -74,10 +73,16 @@ module.exports = {
 			.update(body)
 			.returning('*')
 	},
-	addSkillsToUser: function(body) {
-		return knex('user_skills')
-			.insert(body)
-			.returning('*')
+	addSkillsToUser: function(body, id) {
+		var requests = body.skills_id.map(skill => {
+			var userSkill = {
+				users_id: id,
+				skills_id: skill
+			}
+			return knex('user_skills')
+				.insert(userSkill)
+		})
+		return Promise.all(requests)
 	},
 	deleteSkillsFromUser: function(id) {
 		return knex('user_skills')

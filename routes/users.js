@@ -21,9 +21,7 @@ router.get('/skills', function(req, res) {
 // GET all the skills for one user by ID
 router.get('/skills/:id', function(req, res) {
 	queries.getUserSkillsById(req.params.id).then(userSkills => {
-
 		res.json(userSkills)
-
 	})
 })
 
@@ -41,18 +39,7 @@ router.put('/:id', function(req, res) {
 })
 
 router.post('/skills/:id', function(req, res) {
-	console.log(req.body);
-	var requests = req.body.skills_id.map(skill => {
-		var userSkill = {
-			users_id: req.params.id,
-			skills_id: skill
-		}
-		console.log(userSkill);
-		return knex('user_skills')
-			.insert(userSkill)
-	})
-	Promise.all(requests)
-		.then(() => {
+	queries.addSkillsToUser(req.body, req.params.id).then(() => {
 			res.json({
 				message: 'success!!'
 			})
@@ -62,14 +49,10 @@ router.post('/skills/:id', function(req, res) {
 				error: err
 			})
 		})
-	// queries.addSkillsToUser(req.body).then(data => {
-	// 	res.json(data)
-	// })
 })
 
 router.delete('/skills/:id/:skillId', function(req, res) {
 	queries.deleteSkillsFromUser(req.params.skillId).then(data => {
-		// res.json(data)
 		res.send({
 			message: 'deleted'
 		})
@@ -78,10 +61,8 @@ router.delete('/skills/:id/:skillId', function(req, res) {
 
 router.get('/matches/:id', function(req, res) {
 	queries.getSuggestedMatchesById(req.params.id).then(data => {
-		console.log(data)
 		res.json(data)
 	})
 })
 
 module.exports = router;
-router;
