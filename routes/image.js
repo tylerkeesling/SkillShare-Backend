@@ -3,7 +3,7 @@ const router = express.Router();
 const upload = require('multer')();
 const AWS = require('aws-sdk');
 const uuid = require('uuid/v4');
-
+const knex = require('../db/knex');
 AWS.config.update({
 	accessKeyId: process.env.S3_KEY,
 	secretAccessKey: process.env.S3_SECRET
@@ -29,7 +29,7 @@ router.get('/image', (req, res, next) => {
 	})
 })
 
-router.post('/image/:id', upload.single('image'), (req, res) => {
+router.post('/:id', upload.single('image'), (req, res) => {
 	let id = uuid();
 	s3.putObject({
 		Bucket: process.env.S3_BUCKET,
@@ -42,7 +42,10 @@ router.post('/image/:id', upload.single('image'), (req, res) => {
 			knex('users')
 				.update('photo', `https://s3.us-east-2.amazonaws.com/skillshareimagebucket/${id}`)
 				.where('id', req.params.id)
-			res.json(`{"success": true}`)
+				.then(function(data){
+						res.json(`{"success": true}`)
+				})
+
 		}
 	});
 })

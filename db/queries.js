@@ -29,10 +29,19 @@ module.exports = {
 			.select('users.id', 'user_skills.users_id')
 			.then(function(data) {
 				console.log(data);
-				var loggedUserId = data[0].id
-				var usersCanTeachYou = []
-				for (var i = 0; i < data.length; i++) {
-					usersCanTeachYou[i] = data[i].users_id
+				var loggedUserId
+				var usersCanTeachYou
+				if (data[0] ==undefined) {
+					 loggedUserId = null
+					 usersCanTeachYou = null
+				}
+				else {
+					 loggedUserId = data[0].id
+					 usersCanTeachYou = []
+					for (var i = 0; i < data.length; i++) {
+						usersCanTeachYou[i] = data[i].users_id
+				}
+
 				}
 				return knex('users')
 					.join('user_skills', 'user_skills.skills_id', 'users.skill_learn')
