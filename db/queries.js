@@ -135,8 +135,24 @@ module.exports = {
 			})
 			.select('users.id','users.name')
 	},
+
+	// knex.select('*').from('users').whereNull('last_name').union(function() {
+  // this.select('*').from('users').whereNull('first_name');
+
 	getConnectedByUserId: function(id) {
-		return knex.raw('select userSendInvite_id as id from user_connections where userSendInvite_id = ? and acceptStatus=true  union select userRecievedInvite_id as id from user_connections where userRecievedInvite_id = ? and acceptStatus=true ', [id])
+		// return knex.raw('select userSendInvite_id as id from user_connections where userSendInvite_id = ? and acceptStatus=true  union select userRecievedInvite_id as id from user_connections where userRecievedInvite_id = ? and acceptStatus=true ', [id,id])
+    //  return knex.raw('select userSendInvite_id as id from user_connections where userSendInvite_id =?',[id])
+		return knex.select('userRecievedInvite_id as id').from('user_connections')
+		.where('userSendInvite_id', id)
+		.andWhere('acceptStatus', true)
+
+		.union(function(){
+			this.select('userSendInvite_id as id')
+			.from('user_connections')
+			.where('userRecievedInvite_id', id)
+			.andWhere('acceptStatus', true)
+		})
+
 	}
 
 } //end module exports

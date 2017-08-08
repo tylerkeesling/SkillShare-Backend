@@ -95,7 +95,7 @@ router.get('/connection/request/:id', function(req, res) {
 	})
 })
 router.get('/connection/connected/:id', function(req, res) {
-	queries.getInvitesRecievedByUserId(req.params.id).then(data => {
+	queries.getConnectedByUserId(req.params.id).then(data => {
 		res.json(data)
 	})
 })
