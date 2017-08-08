@@ -7,6 +7,7 @@ const jwt = require('jsonwebtoken')
 require('dotenv').config()
 
 router.post('/signup', function(req, res) {
+	console.log(req.body);
 	knex('users').where('email', req.body.email)
 		.then(newUser => {
 			if (newUser.length !== 0) {
