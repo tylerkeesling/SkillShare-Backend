@@ -83,5 +83,12 @@ router.get('/matches/:id', function(req, res) {
 	})
 })
 
+router.post('/Connection/', function(req, res) {
+	queries.sendConnectionInvite(req.body).then(data => {
+		console.log(data)
+		res.json(data)
+	})
+})
+
 module.exports = router;
 router;
