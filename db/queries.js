@@ -97,6 +97,7 @@ module.exports = {
 			.returning('*')
 	},
 	acceptConnectionInvite: function(body) {
+		console.log(body)
 		return knex('user_connections')
 			.where({
 				userSendInvite_id: body.userSendInvite_id,
@@ -106,22 +107,54 @@ module.exports = {
 				acceptStatus: true
 			})
 	},
+	denyConnectionInvite: function(body) {
+		console.log(body)
+		return knex('user_connections')
+			.where({
+				userSendInvite_id: body.userSendInvite_id,
+				userRecievedInvite_id: body.userRecievedInvite_id,
+				acceptStatus:false
+			})
+			.del()
+	},
 	getInvitesSentByUserId: function(id) {
 		return knex('user_connections')
+		  .join ('users' ,'users.id', 'user_connections.userRecievedInvite_id')
 			.where({
 				userSendInvite_id: id,
 				acceptStatus: false
 			})
+			.select('users.id','users.name')
 	},
 	getInvitesRecievedByUserId: function(id) {
 		return knex('user_connections')
+		   .join ('users' ,'users.id', 'user_connections.userSendInvite_id')
 			.where({
 				userRecievedInvite_id: id,
 				acceptStatus: false
 			})
+			.select('users.id','users.name')
 	},
+
+	// knex.select('*').from('users').whereNull('last_name').union(function() {
+  // this.select('*').from('users').whereNull('first_name');
+
 	getConnectedByUserId: function(id) {
-		return knex.raw('select userSendInvite_id as id from user_connections where userSendInvite_id = ? and acceptStatus=true  union select userRecievedInvite_id as id from user_connections where userRecievedInvite_id = ? and acceptStatus=true ', [id])
+		// return knex.raw('select userSendInvite_id as id from user_connections where userSendInvite_id = ? and acceptStatus=true  union select userRecievedInvite_id as id from user_connections where userRecievedInvite_id = ? and acceptStatus=true ', [id,id])
+    //  return knex.raw('select userSendInvite_id as id from user_connections where userSendInvite_id =?',[id])
+		return knex.select('userRecievedInvite_id as id','users.name').from('user_connections')
+		.join('users','users.id','user_connections.userRecievedInvite_id')
+		.where('userSendInvite_id', id)
+		.andWhere('acceptStatus', true)
+
+		.union(function(){
+			this.select('userSendInvite_id as id','users.name')
+			.from('user_connections')
+			.join('users','users.id','user_connections.userSendInvite_id')
+			.where('userRecievedInvite_id', id)
+			.andWhere('acceptStatus', true)
+		})
+
 	}
 
 } //end module exports
