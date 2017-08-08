@@ -73,4 +73,10 @@ router.post('/connection', function(req, res) {
 	})
 })
 
+router.get('/connection/sent/:id', function(req, res) {
+	queries.getInvitesSentByUserId(req.params.id).then(data => {
+		res.json(data)
+	})
+})
+
 module.exports = router;
