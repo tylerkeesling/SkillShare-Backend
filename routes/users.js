@@ -41,15 +41,38 @@ router.put('/:id', function(req, res) {
 })
 
 router.post('/skills/:id', function(req, res) {
-	queries.addSkillsToUser(req.body).then(data => {
-		res.json(data)
+	console.log(req.body);
+	var requests = req.body.skills_id.map(skill => {
+		var userSkill = {
+			users_id: req.params.id,
+			skills_id: skill
+		}
+		console.log(userSkill);
+		return knex('user_skills')
+			.insert(userSkill)
 	})
+	Promise.all(requests)
+		.then(() => {
+			res.json({
+				message: 'success!!'
+			})
+		})
+		.catch(err => {
+			res.json({
+				error: err
+			})
+		})
+	// queries.addSkillsToUser(req.body).then(data => {
+	// 	res.json(data)
+	// })
 })
 
 router.delete('/skills/:id/:skillId', function(req, res) {
 	queries.deleteSkillsFromUser(req.params.skillId).then(data => {
 		// res.json(data)
-		res.send({message:'deleted'})
+		res.send({
+			message: 'deleted'
+		})
 	})
 })
 
@@ -61,3 +84,4 @@ router.get('/matches/:id', function(req, res) {
 })
 
 module.exports = router;
+router;
