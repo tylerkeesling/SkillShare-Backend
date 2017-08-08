@@ -108,17 +108,21 @@ module.exports = {
 	},
 	getInvitesSentByUserId: function(id) {
 		return knex('user_connections')
+		  .join ('users' ,'users.id', 'user_connections.userRecievedInvite_id')
 			.where({
 				userSendInvite_id: id,
 				acceptStatus: false
 			})
+			.select('users.id','users.name')
 	},
 	getInvitesRecievedByUserId: function(id) {
 		return knex('user_connections')
+		   .join ('users' ,'users.id', 'user_connections.userSendInvite_id')
 			.where({
 				userRecievedInvite_id: id,
 				acceptStatus: false
 			})
+			.select('users.id','users.name')
 	},
 	getConnectedByUserId: function(id) {
 		return knex.raw('select userSendInvite_id as id from user_connections where userSendInvite_id = ? and acceptStatus=true  union select userRecievedInvite_id as id from user_connections where userRecievedInvite_id = ? and acceptStatus=true ', [id])
