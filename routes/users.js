@@ -39,6 +39,7 @@ router.put('/:id', function(req, res) {
 })
 
 router.post('/skills/:id', function(req, res) {
+	console.log(req.body);
 	queries.addSkillsToUser(req.body, req.params.id).then(() => {
 			res.json({
 				message: 'success!!'
