@@ -72,8 +72,14 @@ router.post('/connection', function(req, res) {
 		res.json(data)
 	})
 })
-router.put('/connection', function(req, res) {
+router.put('/connection/accept', function(req, res) {
 	queries.acceptConnectionInvite(req.body).then(data => {
+		console.log(data)
+		res.json(data)
+	})
+})
+router.delete('/connection/deny', function(req, res) {
+	queries.denyConnectionInvite(req.body).then(data => {
 		console.log(data)
 		res.json(data)
 	})
@@ -84,6 +90,11 @@ router.get('/connection/sent/:id', function(req, res) {
 	})
 })
 router.get('/connection/request/:id', function(req, res) {
+	queries.getInvitesRecievedByUserId(req.params.id).then(data => {
+		res.json(data)
+	})
+})
+router.get('/connection/connected/:id', function(req, res) {
 	queries.getInvitesRecievedByUserId(req.params.id).then(data => {
 		res.json(data)
 	})

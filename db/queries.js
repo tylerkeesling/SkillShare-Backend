@@ -97,6 +97,7 @@ module.exports = {
 			.returning('*')
 	},
 	acceptConnectionInvite: function(body) {
+		console.log(body)
 		return knex('user_connections')
 			.where({
 				userSendInvite_id: body.userSendInvite_id,
@@ -105,6 +106,16 @@ module.exports = {
 			.update({
 				acceptStatus: true
 			})
+	},
+	denyConnectionInvite: function(body) {
+		console.log(body)
+		return knex('user_connections')
+			.where({
+				userSendInvite_id: body.userSendInvite_id,
+				userRecievedInvite_id: body.userRecievedInvite_id,
+				acceptStatus:false
+			})
+			.del()
 	},
 	getInvitesSentByUserId: function(id) {
 		return knex('user_connections')
