@@ -148,7 +148,7 @@ module.exports = {
 		.andWhere('acceptStatus', true)
 
 		.union(function(){
-			this.select('userSendInvite_id as id','users.name')
+			this.select('userSendInvite_id as id','users.name','users.email')
 			.from('user_connections')
 			.join('users','users.id','user_connections.userSendInvite_id')
 			.where('userRecievedInvite_id', id)
