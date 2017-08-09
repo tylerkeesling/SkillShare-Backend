@@ -26,7 +26,7 @@ module.exports = {
 		return knex('user_skills')
 			.join('users', 'users.skill_learn', 'user_skills.skills_id')
 			.where('users.id', id)
-			.select('users.id', 'user_skills.users_id')
+			.distinct('users.id', 'user_skills.users_id')
 			.then(function(data) {
 				console.log(data);
 				var loggedUserId
