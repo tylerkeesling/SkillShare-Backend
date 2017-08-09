@@ -53,7 +53,7 @@ module.exports = {
 			.then(function(users) {
 				var requests = users.map(function(user) {
 					return knex('users')
-						.select('skills.id', 'skills.name')
+						.distinct('skills.id', 'skills.name')
 						.join('user_skills', 'users.id', 'user_skills.users_id')
 						.join('skills', 'skills.id', 'user_skills.skills_id')
 						.where('users.id', user.id)
