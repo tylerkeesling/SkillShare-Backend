@@ -4,6 +4,10 @@ exports.up = function(knex, Promise) {
     table.increments()
     table.integer('users_id').references('users.id')
     table.integer('skills_id').references('skills.id')
+  }).then(function(){
+    return knex.schema.alterTable('user_skills', function(t) {
+  t.unique(['users_id', 'skills_id'])
+})
   })
 };
 
